@@ -1,63 +1,106 @@
 #include <iostream>
 using namespace std;
-void insertEdge(int graph[][5],int u,int v)
+class Edge
 {
-    graph[u][v] = 1;
-    graph[v][u] = 1;    
-    cout << "Edge Inserted Successfully.\n";
-}
-void deleteEdge(int graph[][5],int u,int v)
+public:
+    int u, v;
+};
+class Graph
 {
-    graph[u][v] = 0;
-    graph[v][u] = 0;
-    cout << "Edge Deleted Successfully.\n";
-}
-void displayGraph(int graph[][5])
-{
-    cout<<"\nAdjacency Matrix\n";
-    for(int i=0;i<5;i++)
+private:
+    int graph[5][5];
+
+public:
+    Graph()
     {
-        for(int j=0;j<5;j++)
+        for(int i=0;i<5;i++)
         {
-            cout<<graph[i][j]<<" ";
+            for(int j=0;j<5;j++)
+            {
+                graph[i][j]=0;
+            }
         }
-        cout<<endl;
     }
-}
+    void operator <<(Edge e)
+    {
+        if(e.u>=0 && e.u<5 && e.v>=0 && e.v<5)
+        {
+            graph[e.u][e.v]=1;
+            graph[e.v][e.u]=1;
+            cout<<"Edge Inserted Successfully\n";
+        }
+        else
+        {
+            cout<<"Invalid Vertices\n";
+        }
+    }
+    void operator >>(Edge e)
+    {
+        if(e.u>=0 && e.u<5 && e.v>=0 && e.v<5)
+        {
+            graph[e.u][e.v]=0;
+            graph[e.v][e.u]=0;
+            cout<<"Edge Deleted Successfully\n";
+        }
+        else
+        {
+            cout<<"Invalid Vertices\n";
+        }
+    }
+    void display()
+    {
+        cout<<"\nAdjacency Matrix\n\n";
+
+        for(int i=0;i<5;i++)
+        {
+            for(int j=0;j<5;j++)
+            {
+                cout<<graph[i][j]<<" ";
+            }
+
+            cout<<endl;
+        }
+    }
+};
 int main()
 {
-    int graph[5][5]={0};  
-    int choice,u,v;
+    Graph g;
+    Edge e;
+    int choice;
     do
     {
-        cout << "\n===== GRAPH MENU =====";
-        cout << "\n1. Insert Edge";
-        cout << "\n2. Delete Edge";
-        cout << "\n3. Display Graph";
-        cout << "\n4. Exit";
-        cout << "\nEnter your choice: ";
-        cin >> choice;
+        cout<<"\n===== MENU =====\n";
+        cout<<"1. Insert Edge\n";
+        cout<<"2. Delete Edge\n";
+        cout<<"3. Display Graph\n";
+        cout<<"4. Exit\n";
+        cout<<"Enter Choice : ";
+        cin>>choice;
         switch(choice)
         {
             case 1:
-                cout << "Enter two vertices (0-4): ";
-                cin>>u>>v;
-                insertEdge(graph, u, v);
+                cout<<"Enter First Vertex (0-4): ";
+                cin>>e.u;
+                cout<<"Enter Second Vertex (0-4): ";
+                cin>>e.v;
+                g<<e;
                 break;
             case 2:
-                cout<<"Enter two vertices (0-4): ";
-                cin>>u>>v;
-                deleteEdge(graph,u,v);
+                cout<<"Enter First Vertex (0-4): ";
+                cin>>e.u;
+                cout<<"Enter Second Vertex (0-4): ";
+                cin>>e.v;
+                g>>e;
                 break;
             case 3:
-                displayGraph(graph);
+                g.display();
                 break;
             case 4:
-                cout<<"Program Ended.\n";
+                cout<<"Program Ended.";
                 break;
             default:
-                cout<<"Invalid Choice!\n";
+                cout<<"Invalid Choice";
         }
-    } while(choice!=4);
+    }while(choice!=4);
     return 0;
 }
