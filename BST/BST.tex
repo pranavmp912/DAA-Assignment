@@ -1,0 +1,952 @@
+\documentclass[12pt,a4paper]{article}
+
+% --------------------------------------------------
+% PACKAGES
+% --------------------------------------------------
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage[edges]{forest}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+% --------------------------------------------------
+% COLORS
+% --------------------------------------------------
+\definecolor{rednode}{RGB}{255,210,210}
+\definecolor{blacknode}{RGB}{220,220,220}
+\definecolor{avlnode}{RGB}{220,235,255}
+\definecolor{bstnode}{RGB}{235,235,255}
+\definecolor{skewnode}{RGB}{255,235,210}
+
+% --------------------------------------------------
+% TREE STYLES
+% --------------------------------------------------
+\forestset{
+    bst/.style={
+        for tree={
+            circle,
+            draw,
+            minimum size=8mm,
+            inner sep=1pt,
+            s sep=8mm,
+            l sep=12mm,
+            font=\small
+        }
+    },
+    avl/.style={
+        for tree={
+            circle,
+            draw,
+            minimum size=9mm,
+            inner sep=1pt,
+            s sep=8mm,
+            l sep=12mm,
+            font=\small
+        }
+    },
+    rb/.style={
+        for tree={
+            circle,
+            draw,
+            minimum size=9mm,
+            inner sep=1pt,
+            s sep=8mm,
+            l sep=12mm,
+            font=\small
+        }
+    }
+}
+
+% --------------------------------------------------
+% DOCUMENT
+% --------------------------------------------------
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{Binary Search Trees and Balanced Trees}}\\[5pt]
+    {\large BST, Skewed BST, AVL Tree, Red-Black Tree, B-Tree and B+ Tree}
+\end{center}
+
+\vspace{10pt}
+
+\section{Binary Search Tree (BST)}
+
+\subsection{Definition}
+
+A \textbf{Binary Search Tree (BST)} is a binary tree in which, for every node:
+
+\begin{itemize}
+    \item All elements in the left subtree are smaller than the node.
+    \item All elements in the right subtree are greater than the node.
+    \item Both the left and right subtrees must themselves be Binary Search Trees.
+\end{itemize}
+
+Therefore, for a node containing value $x$:
+
+\[
+\boxed{\text{Left Subtree} < x < \text{Right Subtree}}
+\]
+
+A normal BST does not automatically guarantee that the tree remains balanced.
+
+\subsection{BST Construction}
+
+Consider the elements:
+
+\[
+3,6,8,10,11,15,20,35
+\]
+
+If inserted in this order, the BST becomes:
+
+\begin{center}
+\begin{forest}
+bst
+[3
+    [, phantom]
+    [6
+        [, phantom]
+        [8
+            [, phantom]
+            [10
+                [, phantom]
+                [11
+                    [, phantom]
+                    [15
+                        [, phantom]
+                        [20
+                            [, phantom]
+                            [35]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]
+]
+\end{forest}
+\end{center}
+
+Because every new element is greater than the previous element, every new node is inserted to the right.
+
+Thus, this BST is also a \textbf{skewed BST}.
+
+% ==================================================
+\section{Skewed Binary Search Tree}
+
+\subsection{Definition}
+
+A \textbf{Skewed Binary Search Tree} is a BST in which every node has only one child, either a left child or a right child.
+
+There are two types:
+
+\begin{enumerate}
+    \item \textbf{Left-skewed tree}: every node has only a left child.
+    \item \textbf{Right-skewed tree}: every node has only a right child.
+\end{enumerate}
+
+A skewed BST behaves similarly to a linked list.
+
+Its height can become:
+
+\[
+h=n-1
+\]
+
+where $n$ is the number of nodes.
+
+Therefore, searching, insertion and deletion can degrade to:
+
+\[
+O(n)
+\]
+
+\subsection{Construction Using the Given Elements}
+
+Given:
+
+\[
+3,6,8,10,11,15,20,35
+\]
+
+Since the elements are inserted in increasing order, every new element becomes the right child of the previous node.
+
+\begin{center}
+\begin{forest}
+bst
+[3
+    [, phantom]
+    [6
+        [, phantom]
+        [8
+            [, phantom]
+            [10
+                [, phantom]
+                [11
+                    [, phantom]
+                    [15
+                        [, phantom]
+                        [20
+                            [, phantom]
+                            [35]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]
+]
+\end{forest}
+\end{center}
+
+This is a \textbf{right-skewed BST}.
+
+\subsection{Deletion of 11}
+
+The node 11 is a leaf node because it has no children.
+
+Therefore, deletion is simple:
+
+\[
+10 \longrightarrow 11 \longrightarrow 15
+\]
+
+becomes:
+
+\[
+10 \longrightarrow 15
+\]
+
+The resulting tree is:
+
+\begin{center}
+\begin{forest}
+bst
+[3
+    [, phantom]
+    [6
+        [, phantom]
+        [8
+            [, phantom]
+            [10
+                [, phantom]
+                [15
+                    [, phantom]
+                    [20
+                        [, phantom]
+                        [35]
+                    ]
+                ]
+            ]
+        ]
+    ]
+]
+\end{forest}
+\end{center}
+
+\textbf{Reason:} Since 11 is a leaf, simply remove it.
+
+\subsection{Deletion of 20}
+
+After deleting 11, node 20 is also a leaf.
+
+Therefore, remove 20:
+
+\[
+15 \longrightarrow 20 \longrightarrow 35
+\]
+
+becomes:
+
+\[
+15 \longrightarrow 35
+\]
+
+Result:
+
+\begin{center}
+\begin{forest}
+bst
+[3
+    [, phantom]
+    [6
+        [, phantom]
+        [8
+            [, phantom]
+            [10
+                [, phantom]
+                [15
+                    [, phantom]
+                    [35]
+                ]
+            ]
+        ]
+    ]
+]
+\end{forest}
+\end{center}
+
+\subsection{Deletion of 6}
+
+Node 6 has only one child, which is 8.
+
+Therefore, when 6 is deleted, its child 8 takes its position.
+
+Before:
+
+\[
+3 \rightarrow 6 \rightarrow 8
+\]
+
+After deletion:
+
+\[
+3 \rightarrow 8
+\]
+
+Result:
+
+\begin{center}
+\begin{forest}
+bst
+[3
+    [, phantom]
+    [8
+        [, phantom]
+        [10
+            [, phantom]
+            [15
+                [, phantom]
+                [35]
+            ]
+        ]
+    ]
+]
+\end{forest}
+\end{center}
+
+\textbf{Important:} A node with one child is deleted by connecting its parent directly to its child.
+
+% ==================================================
+\section{AVL Tree}
+
+\subsection{Definition}
+
+An \textbf{AVL Tree} is a self-balancing Binary Search Tree in which the height difference between the left and right subtrees of every node is at most 1.
+
+The balance factor of a node is:
+
+\[
+\boxed{
+BF = h(\text{Left Subtree}) - h(\text{Right Subtree})
+}
+\]
+
+For an AVL tree:
+
+\[
+\boxed{BF \in \{-1,0,+1\}}
+\]
+
+If the balance factor becomes $+2$ or $-2$, the tree becomes unbalanced and rotations are performed.
+
+The four types of AVL rotations are:
+
+\begin{enumerate}
+    \item LL Rotation
+    \item RR Rotation
+    \item LR Rotation
+    \item RL Rotation
+\end{enumerate}
+
+\subsection{AVL Construction}
+
+The elements are inserted in the given order:
+
+\[
+3,6,8,10,11,15,20,35
+\]
+
+The final AVL tree is:
+
+\begin{center}
+\begin{forest}
+avl
+[10
+    [6
+        [3]
+        [8]
+    ]
+    [15
+        [11]
+        [20
+            [, phantom]
+            [35]
+        ]
+    ]
+]
+\end{forest}
+\end{center}
+
+\subsection{Important Rotations During Construction}
+
+\subsubsection{Insertion of 8}
+
+Initially:
+
+\begin{center}
+\begin{forest}
+avl
+[3
+    [, phantom]
+    [6
+        [, phantom]
+        [8]
+    ]
+]
+\end{forest}
+\end{center}
+
+Node 3 becomes unbalanced with an RR case.
+
+A left rotation at 3 gives:
+
+\begin{center}
+\begin{forest}
+avl
+[6
+    [3]
+    [8]
+]
+\end{forest}
+\end{center}
+
+\subsubsection{Insertion of 11}
+
+The insertion creates an RR imbalance around node 8.
+
+A left rotation gives:
+
+\begin{center}
+\begin{forest}
+avl
+[10
+    [8]
+    [11]
+]
+\end{forest}
+\end{center}
+
+\subsubsection{Insertion of 15}
+
+The imbalance is corrected by a left rotation in the affected subtree.
+
+The tree becomes:
+
+\begin{center}
+\begin{forest}
+avl
+[10
+    [6
+        [3]
+        [8]
+    ]
+    [11
+        [, phantom]
+        [15]
+    ]
+]
+\end{forest}
+\end{center}
+
+\subsubsection{Insertion of 35}
+
+The right subtree becomes unbalanced and a left rotation is performed around node 15.
+
+The final AVL tree is:
+
+\begin{center}
+\begin{forest}
+avl
+[10
+    [6
+        [3]
+        [8]
+    ]
+    [20
+        [15
+            [11]
+            [, phantom]
+        ]
+        [35]
+    ]
+]
+\end{forest}
+\end{center}
+
+\subsection{Deletion of 11}
+
+In the final AVL tree, 11 is a leaf:
+
+\begin{center}
+\begin{forest}
+avl
+[10
+    [6
+        [3]
+        [8]
+    ]
+    [20
+        [15
+            [11]
+            [, phantom]
+        ]
+        [35]
+    ]
+]
+\end{forest}
+\end{center}
+
+Remove 11 directly.
+
+The resulting tree is:
+
+\begin{center}
+\begin{forest}
+avl
+[10
+    [6
+        [3]
+        [8]
+    ]
+    [20
+        [15]
+        [35]
+    ]
+]
+\end{forest}
+\end{center}
+
+All balance factors remain within:
+
+\[
+-1 \leq BF \leq 1
+\]
+
+Therefore, no rotation is required.
+
+\subsection{Deletion of 20}
+
+Node 20 has two children:
+
+\[
+15 \quad \text{and} \quad 35
+\]
+
+For deletion of a node with two children, we can replace it with its inorder successor.
+
+The inorder successor of 20 is:
+
+\[
+35
+\]
+
+Replace 20 with 35 and remove the original 35.
+
+Result:
+
+\begin{center}
+\begin{forest}
+avl
+[10
+    [6
+        [3]
+        [8]
+    ]
+    [35
+        [15]
+        [, phantom]
+    ]
+]
+\end{forest}
+\end{center}
+
+No rotation is required because the resulting tree remains balanced.
+
+\subsection{Deletion of 6}
+
+After deleting 11 and 20, the relevant portion is:
+
+\begin{center}
+\begin{forest}
+avl
+[10
+    [6
+        [3]
+        [8]
+    ]
+    [35
+        [15]
+        [, phantom]
+    ]
+]
+\end{forest}
+\end{center}
+
+Node 6 has two children:
+
+\[
+3 \quad \text{and} \quad 8
+\]
+
+Its inorder successor is:
+
+\[
+8
+\]
+
+Replace 6 with 8 and remove the original 8.
+
+The final AVL tree is:
+
+\begin{center}
+\begin{forest}
+avl
+[10
+    [8
+        [3]
+        [, phantom]
+    ]
+    [35
+        [15]
+        [, phantom]
+    ]
+]
+\end{forest}
+\end{center}
+
+Again, no rotation is necessary because the tree remains balanced.
+
+% ==================================================
+\section{Red-Black Tree}
+
+\subsection{Definition}
+
+A \textbf{Red-Black Tree} is a self-balancing Binary Search Tree in which every node is assigned one of two colors:
+
+\[
+\boxed{\text{RED or BLACK}}
+\]
+
+A Red-Black Tree satisfies the following properties:
+
+\begin{enumerate}
+    \item Every node is either red or black.
+    \item The root is always black.
+    \item Every NULL/NIL leaf is considered black.
+    \item A red node cannot have a red child.
+    \item Every path from a node to its descendant NIL leaves contains the same number of black nodes.
+\end{enumerate}
+
+These properties ensure that the height of the tree remains approximately logarithmic.
+
+\subsection{Red-Black Tree Construction}
+
+The elements are inserted in the order:
+
+\[
+3,6,8,10,11,15,20,35
+\]
+
+Using the standard Red-Black Tree insertion algorithm, the resulting tree is:
+
+\begin{center}
+\begin{forest}
+rb
+[{\textbf{10B}}
+    [\textcolor{red}{6R}
+        [{3B}]
+        [{8B}]
+    ]
+    [\textcolor{red}{15R}
+        [{11B}]
+        [{20B}
+            [, phantom]
+            [\textcolor{red}{35R}]
+        ]
+    ]
+]
+\end{forest}
+\end{center}
+
+Here:
+
+\[
+R = \text{Red}, \qquad B = \text{Black}
+\]
+
+Thus:
+
+\begin{itemize}
+    \item 10 is black.
+    \item 6 and 15 are red.
+    \item 3, 8, 11 and 20 are black.
+    \item 35 is red.
+\end{itemize}
+
+\subsection{Deletion of 11}
+
+Node 11 is a black leaf.
+
+Removing a black node can violate the black-height property.
+
+Before deletion:
+
+\begin{center}
+\begin{forest}
+rb
+[{\textbf{10B}}
+    [\textcolor{red}{6R}
+        [{3B}]
+        [{8B}]
+    ]
+    [\textcolor{red}{15R}
+        [{11B}]
+        [{20B}
+            [, phantom]
+            [\textcolor{red}{35R}]
+        ]
+    ]
+]
+\end{forest}
+\end{center}
+
+When 11 is removed, the resulting position is treated as a black NIL node.
+
+The sibling of this NIL position is 20B, whose other child is 35R.
+
+The Red-Black deletion fix-up recolors/rotates as necessary.
+
+The resulting tree is:
+
+\begin{center}
+\begin{forest}
+rb
+[{\textbf{10B}}
+    [\textcolor{red}{6R}
+        [{3B}]
+        [{8B}]
+    ]
+    [\textcolor{red}{20R}
+        [{15B}]
+        [{35B}]
+    ]
+]
+\end{forest}
+\end{center}
+
+The important result is that the black-height property is restored.
+
+\subsection{Deletion of 20}
+
+Node 20 is now a red leaf:
+
+\begin{center}
+\begin{forest}
+rb
+[{\textbf{10B}}
+    [\textcolor{red}{6R}
+        [{3B}]
+        [{8B}]
+    ]
+    [\textcolor{red}{20R}
+        [{15B}]
+        [{35B}]
+    ]
+]
+\end{forest}
+\end{center}
+
+Since 20 is red and has no children, it can simply be removed.
+
+No black-height violation occurs.
+
+Result:
+
+\begin{center}
+\begin{forest}
+rb
+[{\textbf{10B}}
+    [\textcolor{red}{6R}
+        [{3B}]
+        [{8B}]
+    ]
+    [\textcolor{red}{35B}
+        [{15R}]
+        [, phantom]
+    ]
+]
+\end{forest}
+\end{center}
+
+\subsection{Deletion of 6}
+
+After deleting 20, the tree is:
+
+\begin{center}
+\begin{forest}
+rb
+[{\textbf{10B}}
+    [\textcolor{red}{6R}
+        [{3B}]
+        [{8B}]
+    ]
+    [{35B}
+        [\textcolor{red}{15R}]
+        [, phantom]
+    ]
+]
+\end{forest}
+\end{center}
+
+Node 6 has two children:
+
+\[
+3B \quad \text{and} \quad 8B
+\]
+
+Therefore, we use its inorder successor.
+
+The inorder successor of 6 is:
+
+\[
+8
+\]
+
+Replace 6 by 8.
+
+The original 8 is a black leaf, so deleting it creates a temporary black-height deficiency.
+
+The sibling of the deficient NIL node is 3B.
+
+Since 3B has black children, it is recolored red during the deletion fix-up.
+
+The final Red-Black Tree is:
+
+\begin{center}
+\begin{forest}
+rb
+[{\textbf{10B}}
+    [{8B}
+        [\textcolor{red}{3R}]
+        [, phantom]
+    ]
+    [{35B}
+        [\textcolor{red}{15R}]
+        [, phantom]
+    ]
+]
+\end{forest}
+\end{center}
+
+Thus the final tree satisfies the Red-Black Tree properties again.
+
+% ==================================================
+\section{B-Tree}
+
+\subsection{Theoretical Definition}
+
+A \textbf{B-Tree} is a height-balanced, multiway search tree designed to store large amounts of data efficiently, particularly in secondary storage such as disks.
+
+Unlike a binary search tree, a B-Tree node can contain multiple keys and have multiple children.
+
+For a B-Tree of order $m$:
+
+\begin{itemize}
+    \item A node can have at most $m$ children.
+    \item A node can contain at most $m-1$ keys.
+    \item Except for the root, every internal node contains at least
+    \[
+    \left\lceil \frac{m}{2} \right\rceil
+    \]
+    children.
+    \item All leaf nodes occur at the same level.
+    \item Keys inside each node are stored in sorted order.
+\end{itemize}
+
+B-Trees are commonly used in databases and file systems because their large branching factor reduces the number of disk accesses.
+
+% ==================================================
+\section{B+ Tree}
+
+\subsection{Theoretical Definition}
+
+A \textbf{B+ Tree} is a variation of the B-Tree in which all actual data records are stored only at the leaf level.
+
+Internal nodes contain only keys used for searching and directing the search toward the appropriate leaf.
+
+Important properties include:
+
+\begin{itemize}
+    \item All actual records/data are stored in leaf nodes.
+    \item Internal nodes contain keys and child pointers.
+    \item All leaves are at the same level.
+    \item Leaf nodes are generally linked together sequentially.
+    \item The linked leaves make sequential and range searches efficient.
+\end{itemize}
+
+Therefore, a B+ Tree has two important levels of organization:
+
+\[
+\boxed{\text{Internal Nodes} \rightarrow \text{Search/Navigation}}
+\]
+
+\[
+\boxed{\text{Leaf Nodes} \rightarrow \text{Actual Data}}
+\]
+
+The linked leaf nodes make operations such as range queries particularly efficient.
+
+% ==================================================
+\section{Summary of Deletions}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Deleted Node} & \textbf{Skewed BST} & \textbf{AVL} & \textbf{Red-Black} \\
+\hline
+11 & Leaf deletion & Leaf deletion & Black leaf + fix-up \\
+\hline
+20 & Leaf deletion & Two-child deletion & Red leaf deletion \\
+\hline
+6 & One-child deletion & Two-child deletion & Two-child deletion + fix-up \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Important Deletion Rules}
+
+\textbf{Case 1: Node is a leaf}
+
+\[
+\boxed{\text{Simply remove the node}}
+\]
+
+\textbf{Case 2: Node has one child}
+
+\[
+\boxed{\text{Replace the node by its child}}
+\]
+
+\textbf{Case 3: Node has two children}
+
+\[
+\boxed{\text{Replace it with its inorder successor/predecessor}}
+\]
+
+For AVL and Red-Black Trees, additional balancing operations may be required after deletion.
+
+\end{document}
